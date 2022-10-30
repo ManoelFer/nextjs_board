@@ -1,7 +1,10 @@
 
-import Link from 'next/link'
-import styles from './styles.module.scss'
 
+import Link from 'next/link'
+
+import { SignInButton } from 'components/SignInButton'
+
+import styles from './styles.module.scss'
 
 export const Header = () => {
     return (
@@ -20,10 +23,7 @@ export const Header = () => {
                     </Link>
                 </nav>
 
-
-                <button>
-                    Entrar com github
-                </button>
+                <SignInButton />
             </div>
         </header>
     )
