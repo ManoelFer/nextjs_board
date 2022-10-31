@@ -18,7 +18,7 @@ export const Header = () => {
                         Home
                     </Link>
 
-                    <Link href="/board">
+                    <Link href="/Board">
                         Meu board
                     </Link>
                 </nav>
