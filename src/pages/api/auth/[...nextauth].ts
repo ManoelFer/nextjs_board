@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth, { NextAuthOptions } from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 
 export const authOptions = {
@@ -13,6 +13,23 @@ export const authOptions = {
             }
         }),
     ],
-}
+    callbacks: {
+        async session({ session, token }) {
+            try {
+                return { ...session, id: token.sub }
+            } catch (error) {
+                return { ...session, id: null }
+            }
+        },
+        async signIn({ }) {
+            try {
+                return true
+            } catch (error) {
+                console.log('Deu erro :>> ', error);
+                return false
+            }
+        }
+    }
+} as NextAuthOptions
 
 export default NextAuth(authOptions)
