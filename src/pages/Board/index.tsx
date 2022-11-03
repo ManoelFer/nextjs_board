@@ -1,23 +1,56 @@
 
+import { useState, FormEvent } from 'react'
 import Head from 'next/head'
 import { GetServerSideProps } from 'next'
 import { getSession } from 'next-auth/react'
 import { FiCalendar, FiClock, FiEdit2, FiPlus, FiTrash } from 'react-icons/fi'
+import { addDoc, collection } from 'firebase/firestore'
+import { toast } from 'react-toastify';
 
 import { SupportButton } from 'components/SupportButton'
 
+import db from 'services/firebaseConnection'
+
 import styles from './styles.module.scss'
 
+import { IPropsServerSide } from './interfaces'
 
-export default function Board() {
+export default function Board({ user }: IPropsServerSide) {
+    const [input, setInput] = useState('')
+
+    async function handleAddTask(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+
+        if (input === "") {
+            return toast.warning("Adicione alguma tarefa no campo de texto!")
+        }
+
+        try {
+            await addDoc(collection(db, "tasks"), {
+                created_at: new Date(),
+                task: input,
+                userId: user.id,
+                name: user.name
+            });
+
+            setInput('')
+
+            toast.success("Tarefa registrada com sucesso!")
+        } catch (e) {
+            console.error("Error adding document: ", e);
+            toast.error("Erro no cadastro da tarefa!")
+        }
+    }
+
+
     return (
         <>
             <Head>
                 <title>Minhas tarefas - Board</title>
             </Head>
             <main className={styles.containerStyle}>
-                <form>
-                    <input type="text" placeholder="Digite sua tarefa..." />
+                <form onSubmit={handleAddTask}>
+                    <input type="text" placeholder="Digite sua tarefa..." onChange={(e) => setInput(e.target.value)} />
                     <button type="submit">
                         <FiPlus size={25} color="#17181f" />
                     </button>
@@ -80,7 +113,15 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
         }
     }
 
+    const user = {
+        name: session?.user?.name,
+        //@ts-ignore
+        id: session?.id
+    }
+
     return {
-        props: {}
+        props: {
+            user
+        }
     }
 }
