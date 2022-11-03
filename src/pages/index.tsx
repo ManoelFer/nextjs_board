@@ -1,3 +1,4 @@
+import { GetStaticProps } from 'next'
 import Head from 'next/head'
 import styles from 'styles/styles.module.scss'
 
@@ -26,4 +27,13 @@ export default function Home() {
     </>
 
   )
+}
+
+//TODO: deixa a página estática e recarrega a cada 1 hora
+export const getStaticProps: GetStaticProps = async () => {
+
+  return {
+    props: {},
+    revalidate: 60 * 60
+  }
 }
