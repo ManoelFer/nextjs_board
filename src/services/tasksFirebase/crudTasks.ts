@@ -1,4 +1,5 @@
 import { addDoc, collection } from "firebase/firestore";
+import { format } from 'date-fns'
 
 import db from "services/firebaseConnection";
 
@@ -20,6 +21,7 @@ const crudTasks = (): IMethodsCRUDTasks => {
             const data = {
                 docRef: docRef.id,
                 created_at: created_at,
+                created_formatted: format(new Date(), 'dd MMMM yyyy'),
                 task: task,
                 userId: userId,
                 name: name
