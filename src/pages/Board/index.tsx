@@ -4,12 +4,11 @@ import Head from 'next/head'
 import { GetServerSideProps } from 'next'
 import { getSession } from 'next-auth/react'
 import { FiCalendar, FiClock, FiEdit2, FiPlus, FiTrash } from 'react-icons/fi'
-import { addDoc, collection } from 'firebase/firestore'
 import { toast } from 'react-toastify';
 
 import { SupportButton } from 'components/SupportButton'
 
-import db from 'services/firebaseConnection'
+import crudTasks from 'services/tasksFirebase/crudTasks'
 
 import styles from './styles.module.scss'
 
@@ -17,6 +16,7 @@ import { IPropsServerSide } from './interfaces'
 
 export default function Board({ user }: IPropsServerSide) {
     const [input, setInput] = useState('')
+    const { registerTask } = crudTasks()
 
     async function handleAddTask(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
@@ -26,7 +26,7 @@ export default function Board({ user }: IPropsServerSide) {
         }
 
         try {
-            await addDoc(collection(db, "tasks"), {
+            const registeredTask = await registerTask({
                 created_at: new Date(),
                 task: input,
                 userId: user.id,

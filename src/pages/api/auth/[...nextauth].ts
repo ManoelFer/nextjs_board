@@ -25,7 +25,7 @@ export const authOptions = {
             try {
                 return true
             } catch (error) {
-                console.log('Deu erro :>> ', error);
+                console.log('Erro na autenticação :>> ', error);
                 return false
             }
         }
