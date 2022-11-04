@@ -16,9 +16,9 @@ import { IPropsServerSide } from './interfaces'
 import { ITask } from 'services/tasksFirebase/interfaces'
 import Link from 'next/link'
 
-export default function Board({ user }: IPropsServerSide) {
+export default function Board({ user, tasks }: IPropsServerSide) {
     const [input, setInput] = useState('')
-    const [taskList, setTaskList] = useState<ITask[]>([])
+    const [taskList, setTaskList] = useState<ITask[]>(JSON.parse(tasks))
     const { registerTask } = crudTasks()
 
     async function handleAddTask(e: FormEvent<HTMLFormElement>) {
@@ -61,11 +61,11 @@ export default function Board({ user }: IPropsServerSide) {
                     </button>
                 </form>
 
-                <h1>Você tem 2 tarefas!</h1>
+                <h1>Você tem {taskList.length} {taskList.length > 1 ? "tarefas" : "tarefa"}!</h1>
 
                 <section>
                     {taskList.map((task: ITask) => (
-                        <article className={styles.taskListStyle} id={task.id}>
+                        <article className={styles.taskListStyle} key={task.id}>
                             <Link href={`/Board/${task.id}`}>
                                 <p>{task.task}</p>
                             </Link>
@@ -112,6 +112,7 @@ export default function Board({ user }: IPropsServerSide) {
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     const session = await getSession({ req })
+    const { getTasks } = crudTasks()
 
     //@ts-ignore
     if (!session?.id) {
@@ -130,9 +131,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
         id: session?.id
     }
 
+    //@ts-ignore
+    const tasks = JSON.stringify(await getTasks(session?.id))
+
+
     return {
         props: {
-            user
+            user,
+            tasks
         }
     }
 }

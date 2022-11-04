@@ -1,4 +1,3 @@
-
 export interface ITask {
     id?: string;
     created_at: Date;
@@ -10,4 +9,5 @@ export interface ITask {
 
 export interface IMethodsCRUDTasks {
     registerTask: ({ created_at, task, userId, name }: ITask) => Promise<ITask>;
+    getTasks: (userId: string) => Promise<any>;
 }

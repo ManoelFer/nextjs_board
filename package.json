@@ -12,7 +12,7 @@
     "date-fns": "^2.29.3",
     "firebase": "^9.13.0",
     "next": "13.0.0",
-    "next-auth": "^4.15.0",
+    "next-auth": "0.0.0-pr.3217.87a21677",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.6.0",
