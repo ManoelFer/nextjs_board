@@ -19,7 +19,7 @@ import Link from 'next/link'
 export default function Board({ user, tasks }: IPropsServerSide) {
     const [input, setInput] = useState('')
     const [taskList, setTaskList] = useState<ITask[]>(JSON.parse(tasks))
-    const { registerTask } = crudTasks()
+    const { registerTask, deleteTask } = crudTasks()
 
     async function handleAddTask(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
@@ -47,6 +47,20 @@ export default function Board({ user, tasks }: IPropsServerSide) {
         }
     }
 
+    async function handleDeleteTask(taskId: string) {
+        if (taskId) {
+            const taskIsDeleted = await deleteTask(taskId)
+
+            if (taskIsDeleted) {
+                const newArrayTasks = taskList.filter(task => task.id !== taskId)
+                setTaskList(newArrayTasks)
+                toast.success("Tarefa excluída com sucesso!")
+            } else {
+                toast.error("Falha ao remover tarefa!")
+            }
+        }
+    }
+
 
     return (
         <>
@@ -66,7 +80,7 @@ export default function Board({ user, tasks }: IPropsServerSide) {
                 <section>
                     {taskList.map((task: ITask) => (
                         <article className={styles.taskListStyle} key={task.id}>
-                            <Link href={`/Board/${task.id}`}>
+                            <Link href={`/board/${task.id}`}>
                                 <p>{task.task}</p>
                             </Link>
 
@@ -82,7 +96,7 @@ export default function Board({ user, tasks }: IPropsServerSide) {
                                     </button>
                                 </div>
 
-                                <button>
+                                <button onClick={() => handleDeleteTask(task.id || "")}>
                                     <FiTrash size={20} color="#ff3636" />
                                     <span>Excluir</span>
                                 </button>

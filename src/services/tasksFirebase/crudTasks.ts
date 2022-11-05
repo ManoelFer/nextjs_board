@@ -1,4 +1,4 @@
-import { addDoc, getDocs, collection, query, orderBy, DocumentData, where } from "firebase/firestore";
+import { doc, addDoc, getDocs, deleteDoc, collection, query, orderBy, DocumentData, where } from "firebase/firestore";
 import { format } from 'date-fns'
 
 import db from "services/firebaseConnection";
@@ -57,9 +57,20 @@ const crudTasks = (): IMethodsCRUDTasks => {
         }
     }
 
+    async function deleteTask(taskId: string): Promise<boolean> {
+        try {
+            await deleteDoc(doc(db, "tasks", taskId));
+            return true
+        } catch (error) {
+            console.log('("Falha ao remover tarefa! Erro original >> ', error)
+            return false;
+        }
+    }
+
     return {
         registerTask,
-        getTasks
+        getTasks,
+        deleteTask
     }
 }
 

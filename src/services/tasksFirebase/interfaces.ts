@@ -1,3 +1,5 @@
+import { DocumentData } from "firebase/firestore";
+
 export interface ITask {
     id?: string;
     created_at: Date;
@@ -9,5 +11,6 @@ export interface ITask {
 
 export interface IMethodsCRUDTasks {
     registerTask: ({ created_at, task, userId, name }: ITask) => Promise<ITask>;
-    getTasks: (userId: string) => Promise<any>;
+    getTasks: (userId: string) => Promise<DocumentData[] | []>;
+    deleteTask: (taskId: string) => Promise<boolean>;
 }
