@@ -3,7 +3,7 @@ import { useState, FormEvent } from 'react'
 import Head from 'next/head'
 import { GetServerSideProps } from 'next'
 import { getSession } from 'next-auth/react'
-import { FiCalendar, FiClock, FiEdit2, FiPlus, FiTrash } from 'react-icons/fi'
+import { FiCalendar, FiClock, FiEdit, FiEdit2, FiPlus, FiTrash, FiX } from 'react-icons/fi'
 import { toast } from 'react-toastify';
 
 import { SupportButton } from 'components/SupportButton'
@@ -19,13 +19,34 @@ import Link from 'next/link'
 export default function Board({ user, tasks }: IPropsServerSide) {
     const [input, setInput] = useState('')
     const [taskList, setTaskList] = useState<ITask[]>(JSON.parse(tasks))
-    const { registerTask, deleteTask } = crudTasks()
+    const [taskEdit, setTaskEdit] = useState<ITask | null>(null)
+    const { registerTask, editTask, deleteTask } = crudTasks()
 
     async function handleAddTask(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
 
         if (input === "") {
             return toast.warning("Adicione alguma tarefa no campo de texto!")
+        }
+
+        if (taskEdit) {
+            try {
+                editTask({ id: taskEdit.id || "", task: input })
+
+                const taskPosition = taskList.findIndex(task => task.id === taskEdit.id)
+
+                taskList[taskPosition].task = input
+
+                setTaskList(taskList)
+
+                handleCancelEdit()
+
+                return toast.success("Tarefa editada com sucesso!")
+            } catch (e) {
+                setInput('')
+                console.error("Error edit document: ", e);
+                return toast.error("Erro na edição da tarefa!")
+            }
         }
 
         try {
@@ -61,6 +82,16 @@ export default function Board({ user, tasks }: IPropsServerSide) {
         }
     }
 
+    async function handleEditTask(task: ITask) {
+        setTaskEdit(task)
+        setInput(task.task)
+    }
+
+    async function handleCancelEdit() {
+        setTaskEdit(null)
+        setInput("")
+    }
+
 
     return (
         <>
@@ -68,10 +99,20 @@ export default function Board({ user, tasks }: IPropsServerSide) {
                 <title>Minhas tarefas - Board</title>
             </Head>
             <main className={styles.containerStyle}>
+
+                {taskEdit && (
+                    <span className={styles.editText}>
+                        <button onClick={handleCancelEdit}>
+                            <FiX size={30} color="#FF3636" />
+                        </button>
+                        Você está editando uma tarefa!
+                    </span>
+                )}
+
                 <form onSubmit={handleAddTask}>
                     <input type="text" placeholder="Digite sua tarefa..." value={input} onChange={(e) => setInput(e.target.value)} />
                     <button type="submit">
-                        <FiPlus size={25} color="#17181f" />
+                        {taskEdit ? <FiEdit size={25} color="#17181f" /> : <FiPlus size={25} color="#17181f" />}
                     </button>
                 </form>
 
@@ -90,7 +131,7 @@ export default function Board({ user, tasks }: IPropsServerSide) {
                                         <FiCalendar size={20} color="#FFB800" />
                                         <time>{task.created_formatted}</time>
                                     </div>
-                                    <button>
+                                    <button onClick={() => handleEditTask(task)}>
                                         <FiEdit2 size={20} color="#fff" />
                                         <span>Editar</span>
                                     </button>

@@ -9,8 +9,14 @@ export interface ITask {
     name: string;
 }
 
+export interface ITaskEdit {
+    id: string;
+    task: string;
+}
+
 export interface IMethodsCRUDTasks {
     registerTask: ({ created_at, task, userId, name }: ITask) => Promise<ITask>;
     getTasks: (userId: string) => Promise<DocumentData[] | []>;
     deleteTask: (taskId: string) => Promise<boolean>;
+    editTask: ({ id, task }: ITaskEdit) => Promise<void>;
 }

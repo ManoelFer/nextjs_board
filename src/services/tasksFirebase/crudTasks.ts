@@ -1,9 +1,9 @@
-import { doc, addDoc, getDocs, deleteDoc, collection, query, orderBy, DocumentData, where } from "firebase/firestore";
+import { doc, addDoc, updateDoc, getDocs, deleteDoc, collection, query, orderBy, DocumentData, where } from "firebase/firestore";
 import { format } from 'date-fns'
 
 import db from "services/firebaseConnection";
 
-import { IMethodsCRUDTasks, ITask } from "./interfaces"
+import { IMethodsCRUDTasks, ITask, ITaskEdit } from "./interfaces"
 
 
 const crudTasks = (): IMethodsCRUDTasks => {
@@ -67,10 +67,25 @@ const crudTasks = (): IMethodsCRUDTasks => {
         }
     }
 
+    async function editTask({ id, task }: ITaskEdit): Promise<void> {
+        const taskRef = doc(db, "tasks", id || "");
+
+        try {
+            await updateDoc(taskRef, {
+                task: task
+            });
+
+        } catch (e) {
+            console.error("Error update document: ", e);
+            throw new Error("Erro ao editar tarefa no banco!")
+        }
+    }
+
     return {
         registerTask,
         getTasks,
-        deleteTask
+        deleteTask,
+        editTask
     }
 }
 
