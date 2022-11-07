@@ -12,11 +12,11 @@ import crudTasks from 'services/tasksFirebase/crudTasks'
 
 import styles from './styles.module.scss'
 
-import { IPropsServerSide } from './interfaces'
+import { IPropsServerSideBoard } from './interfaces'
 import { ITask } from 'services/tasksFirebase/interfaces'
 import Link from 'next/link'
 
-export default function Board({ user, tasks }: IPropsServerSide) {
+export default function Board({ user, tasks }: IPropsServerSideBoard) {
     const [input, setInput] = useState('')
     const [taskList, setTaskList] = useState<ITask[]>(JSON.parse(tasks))
     const [taskEdit, setTaskEdit] = useState<ITask | null>(null)

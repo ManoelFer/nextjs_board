@@ -1,4 +1,4 @@
-import { doc, addDoc, updateDoc, getDocs, deleteDoc, collection, query, orderBy, DocumentData, where } from "firebase/firestore";
+import { doc, addDoc, updateDoc, getDocs, getDoc, deleteDoc, collection, query, orderBy, DocumentData, where } from "firebase/firestore";
 import { format } from 'date-fns'
 
 import db from "services/firebaseConnection";
@@ -57,6 +57,35 @@ const crudTasks = (): IMethodsCRUDTasks => {
         }
     }
 
+    async function getTaskByDocId(docId: string): Promise<ITask | null> {
+
+        try {
+            const docRef = doc(db, "tasks", docId);
+
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const { userId, name, task, created_at } = docSnap.data()
+
+                const taskData = {
+                    id: docSnap.id,
+                    userId: userId,
+                    name: name,
+                    task: task,
+                    created_formatted: format(created_at.toDate(), 'dd MMMM yyyy'),
+                    created_at: created_at
+                }
+
+                return taskData || null
+            } else {
+                throw new Error("Tarefa não encontrada!")
+            }
+        } catch (e) {
+            console.error("Error find task document: ", e);
+            throw new Error("Erro ao trazer a tarefa do banco!")
+        }
+    }
+
     async function deleteTask(taskId: string): Promise<boolean> {
         try {
             await deleteDoc(doc(db, "tasks", taskId));
@@ -84,8 +113,9 @@ const crudTasks = (): IMethodsCRUDTasks => {
     return {
         registerTask,
         getTasks,
+        getTaskByDocId,
         deleteTask,
-        editTask
+        editTask,
     }
 }
 

@@ -19,4 +19,5 @@ export interface IMethodsCRUDTasks {
     getTasks: (userId: string) => Promise<DocumentData[] | []>;
     deleteTask: (taskId: string) => Promise<boolean>;
     editTask: ({ id, task }: ITaskEdit) => Promise<void>;
+    getTaskByDocId: (docId: string) => Promise<ITask | null>;
 }
