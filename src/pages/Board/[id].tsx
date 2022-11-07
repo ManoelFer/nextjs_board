@@ -1,18 +1,34 @@
 import { GetServerSideProps } from "next"
 import { getSession } from "next-auth/react"
+import Head from "next/head"
+import { FiCalendar } from "react-icons/fi"
 import crudTasks from "services/tasksFirebase/crudTasks"
 import { ITask } from "services/tasksFirebase/interfaces"
 import { IPropsServerSideTaskDetails } from "./interfaces"
+
+import styles from "./task.module.scss"
 
 
 export default function TaskDetails({ task }: IPropsServerSideTaskDetails) {
     const taskDetails = JSON.parse(task) as ITask
 
     return (
-        <div>
-            <h1>Página de detalhes</h1>
-            <h2>{taskDetails.task}</h2>
-        </div>
+        <>
+            <Head>
+                <title>Detalhes da sua tarefa</title>
+            </Head>
+
+            <article className={styles.containerStyle}>
+                <div className={styles.actionsStyle}>
+                    <div>
+                        <FiCalendar size={30} color="#fff" />
+                        <span>Tarefa criada:</span>
+                        <time>{taskDetails.created_formatted}</time>
+                    </div>
+                </div>
+                <p>{taskDetails.task}</p>
+            </article>
+        </>
     )
 }
 
