@@ -35,6 +35,7 @@ export default function TaskDetails({ task }: IPropsServerSideTaskDetails) {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, params }) => {
     const session = await getSession({ req })
+    let task
 
     const { getTaskByDocId } = crudTasks()
     //@ts-ignore
@@ -51,7 +52,20 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
         }
     }
 
-    const task = await getTaskByDocId(String(id))
+    try {
+        task = await getTaskByDocId(String(id))
+    } catch (error) {
+        task = {}
+    }
+
+    if (Object.keys(task || {}).length === 0) {
+        return {
+            redirect: {
+                destination: '/board',
+                permanent: false
+            }
+        }
+    }
 
     return {
         props: {
