@@ -1,5 +1,3 @@
-import { ITask } from "services/tasksFirebase/interfaces";
-
 export interface IPropsServerSideBoard {
     user: {
         name: string;
