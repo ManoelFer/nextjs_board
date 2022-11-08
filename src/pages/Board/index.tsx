@@ -1,20 +1,24 @@
-
-import { useState, FormEvent } from 'react'
 import Head from 'next/head'
 import { GetServerSideProps } from 'next'
 import { getSession } from 'next-auth/react'
+import Link from 'next/link'
+
+import { useState, FormEvent } from 'react'
+
 import { FiCalendar, FiClock, FiEdit, FiEdit2, FiPlus, FiTrash, FiX } from 'react-icons/fi'
 import { toast } from 'react-toastify';
+import { formatDistance } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 import { SupportButton } from 'components/SupportButton'
 
 import crudTasks from 'services/tasksFirebase/crudTasks'
 
-import styles from './styles.module.scss'
-
 import { IPropsServerSideBoard } from './interfaces'
 import { ITask } from 'services/tasksFirebase/interfaces'
-import Link from 'next/link'
+
+import styles from './styles.module.scss'
+
 
 export default function Board({ user, tasks }: IPropsServerSideBoard) {
     const [input, setInput] = useState('')
@@ -92,7 +96,6 @@ export default function Board({ user, tasks }: IPropsServerSideBoard) {
         setInput("")
     }
 
-
     return (
         <>
             <Head>
@@ -131,10 +134,12 @@ export default function Board({ user, tasks }: IPropsServerSideBoard) {
                                         <FiCalendar size={20} color="#FFB800" />
                                         <time>{task.created_formatted}</time>
                                     </div>
-                                    <button onClick={() => handleEditTask(task)}>
-                                        <FiEdit2 size={20} color="#fff" />
-                                        <span>Editar</span>
-                                    </button>
+                                    {user.vip && (
+                                        <button onClick={() => handleEditTask(task)}>
+                                            <FiEdit2 size={20} color="#fff" />
+                                            <span>Editar</span>
+                                        </button>
+                                    )}
                                 </div>
 
                                 <button onClick={() => handleDeleteTask(task.id || "")}>
@@ -148,16 +153,17 @@ export default function Board({ user, tasks }: IPropsServerSideBoard) {
                 </section>
             </main>
 
-
-            <div className={styles.vipContainerStyle}>
-                <h3>Obrigado por apoiar esse projeto.</h3>
-                <div>
-                    <FiClock size={28} color="#fff" />
-                    <time>
-                        Última doação foi a 3 dias.
-                    </time>
+            {user.vip && (
+                <div className={styles.vipContainerStyle}>
+                    <h3>Obrigado por apoiar esse projeto.</h3>
+                    <div>
+                        <FiClock size={28} color="#fff" />
+                        <time>
+                            Última doação foi a {formatDistance(new Date(user.lastDonate), new Date(), { locale: ptBR })}.
+                        </time>
+                    </div>
                 </div>
-            </div>
+            )}
 
             <SupportButton />
         </>
@@ -180,10 +186,13 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
         }
     }
 
+
     const user = {
         name: session?.user?.name,
         //@ts-ignore
-        id: session?.id
+        id: session?.id,
+        vip: session?.vip,
+        lastDonate: session?.lastDonate
     }
 
     //@ts-ignore

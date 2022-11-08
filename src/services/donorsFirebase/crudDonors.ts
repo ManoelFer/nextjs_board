@@ -66,8 +66,8 @@ const crudDonors = (): IMethodsCRUDDonors => {
                 const donorData = {
                     id: docSnap.id,
                     donate: donate,
-                    lastDonate: lastDonate,
-                    lastDonateFormatted: format(lastDonate.toDate(), 'dd MMMM yyyy'),
+                    lastDonate: lastDonate.toDate(),
+                    lastDonateFormatted: format(lastDonate.toDate(), 'dd MMMM yyyy hh:mm:ss'),
                     image: image,
                 }
 

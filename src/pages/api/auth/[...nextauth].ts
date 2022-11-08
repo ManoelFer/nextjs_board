@@ -26,7 +26,7 @@ export const authOptions = {
 
                 const { lastDonate, lastDonateFormatted } = donor
 
-                return { ...session, id: token.sub, vip: lastDonate ? true : false, lastDonate: lastDonateFormatted }
+                return { ...session, id: token.sub, vip: lastDonate ? true : false, lastDonate: lastDonate, lastDonateFormatted: lastDonateFormatted }
             } catch (error) {
                 return { ...session, id: null, vip: false, lasDonate: null }
             }
