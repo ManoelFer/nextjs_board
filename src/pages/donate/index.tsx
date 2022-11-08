@@ -13,15 +13,13 @@ import crudDonors from 'services/donorsFirebase/crudDonors'
 import styles from './styles.module.scss'
 
 
-
 export default function Donate({ user }: IDonateProps) {
     const [isVip, setVip] = useState<boolean>(false)
     const { registerDonor } = crudDonors()
 
     async function handleSaveDonate() {
-
         try {
-            await registerDonor({ donate: true, lastDonate: new Date(), image: user.image })
+            await registerDonor({ donate: true, lastDonate: new Date(), image: user.image, userId: user.id })
             setVip(true)
         } catch (error) {
             toast.error("Falha ao adicionar doador no banco!")

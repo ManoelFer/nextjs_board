@@ -41,9 +41,15 @@
 .donatersStyle {
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
     flex-wrap: wrap;
     margin-bottom: 1.5rem;
     transition: all 0.2s;
+
+    h3 {
+        margin-top: 2rem;
+    }
 
     img {
         cursor: pointer;

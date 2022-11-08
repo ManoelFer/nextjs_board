@@ -1,8 +1,17 @@
 import { GetStaticProps } from 'next'
 import Head from 'next/head'
-import styles from 'styles/styles.module.scss'
 
-export default function Home() {
+import crudDonors from 'services/donorsFirebase/crudDonors'
+
+import { IHomeProps } from './interfaces'
+
+import styles from 'styles/styles.module.scss'
+import { IDonor } from 'services/donorsFirebase/interface'
+
+
+export default function Home({ donors }: IHomeProps) {
+  const donaters = JSON.parse(donors) as IDonor[]
+
   return (
     <>
       <Head>
@@ -21,7 +30,12 @@ export default function Home() {
         </section>
 
         <div className={styles.donatersStyle}>
-          <img src="https://sujeitoprogramador.com/steve.png" alt='Usuário 1' />
+          {donaters.length !== 0 && <h3>Apoiadores:</h3>}
+
+          {donaters.map((donor) => (
+            <img key={donor.image} src={donor.image} alt='Usuário 1' />
+          )
+          )}
         </div>
       </main>
     </>
@@ -31,9 +45,14 @@ export default function Home() {
 
 //TODO: deixa a página estática e recarrega a cada 1 hora
 export const getStaticProps: GetStaticProps = async () => {
+  const { getDonors } = crudDonors()
+
+  const donors = JSON.stringify(await getDonors())
 
   return {
-    props: {},
+    props: {
+      donors
+    },
     revalidate: 60 * 60
   }
 }
