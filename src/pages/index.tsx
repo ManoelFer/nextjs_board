@@ -1,9 +1,12 @@
 import { GetStaticProps } from 'next'
 import Head from 'next/head'
+import Image from 'next/image'
 
 import crudDonors from 'services/donorsFirebase/crudDonors'
 
 import { IHomeProps } from './interfaces'
+
+import boardUser from '/public/images/board-user.svg'
 
 import styles from 'styles/styles.module.scss'
 import { IDonor } from 'services/donorsFirebase/interface'
@@ -19,7 +22,7 @@ export default function Home({ donors }: IHomeProps) {
       </Head>
 
       <main className={styles.contentContainerStyle}>
-        <img src='/images/board-user.svg' alt='Ferramenta board' />
+        <Image src={boardUser} alt='Ferramenta board' width={553} height={384} />
 
         <section className={styles.callToActionStyle}>
           <h1>Uma ferramenta para seu dia a dia! Escreva, planeje e organize-se...</h1>
@@ -33,7 +36,7 @@ export default function Home({ donors }: IHomeProps) {
           {donaters.length !== 0 && <h3>Apoiadores:</h3>}
 
           {donaters.map((donor) => (
-            <img key={donor.image} src={donor.image} alt='Usuário 1' />
+            <Image key={donor.image} src={donor.image} alt='Usuário 1' width={65} height={65} />
           )
           )}
         </div>

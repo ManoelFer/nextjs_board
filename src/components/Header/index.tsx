@@ -1,8 +1,11 @@
 
 
 import Link from 'next/link'
+import Image from 'next/image'
 
 import { SignInButton } from 'components/SignInButton'
+
+import logo from '/public/images/logo.svg'
 
 import styles from './styles.module.scss'
 
@@ -11,7 +14,7 @@ export const Header = () => {
         <header className={styles.headerContainer}>
             <div className={styles.headerContent}>
                 <Link href="/">
-                    <img src="/images/logo.svg" alt="logoMeuBoard" />
+                    <Image src={logo} alt="logoMeuBoard" />
                 </Link>
                 <nav>
                     <Link href="/">

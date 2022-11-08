@@ -2,6 +2,7 @@ import { GetServerSideProps } from 'next'
 import { useState } from 'react'
 import { getSession } from 'next-auth/react'
 import Head from 'next/head'
+import Image from 'next/image'
 
 import { toast } from 'react-toastify'
 import { PayPalButtons } from '@paypal/react-paypal-js'
@@ -9,6 +10,8 @@ import { PayPalButtons } from '@paypal/react-paypal-js'
 import { IDonateProps } from './interface'
 
 import crudDonors from 'services/donorsFirebase/crudDonors'
+
+import rocket from '/public/images/rocket.svg'
 
 import styles from './styles.module.scss'
 
@@ -34,11 +37,11 @@ export default function Donate({ user }: IDonateProps) {
             </Head>
 
             <main className={styles.containerStyles}>
-                <img src='/images/rocket.svg' alt='Seja Apoiador' />
+                <Image src={rocket} alt='Seja Apoiador' />
 
                 {isVip && (
                     <div className={styles.vipStyles}>
-                        <img src={user.image} alt='Foto do Apoiador' />
+                        <Image src={user.image} alt='Foto do Apoiador' width={50} height={50} />
                         <span>Parabéns você é um novo apoiador!</span>
                     </div>
                 )}

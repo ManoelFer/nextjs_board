@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next"
 import { getSession } from "next-auth/react"
 import Head from "next/head"
 import { FiCalendar } from "react-icons/fi"
-import { toast } from "react-toastify"
+
 import crudTasks from "services/tasksFirebase/crudTasks"
 import { ITask } from "services/tasksFirebase/interfaces"
 import { IPropsServerSideTaskDetails } from "./interfaces"
