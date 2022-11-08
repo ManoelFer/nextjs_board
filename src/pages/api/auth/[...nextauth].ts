@@ -1,6 +1,8 @@
 import NextAuth, { NextAuthOptions } from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 
+import crudDonors from "services/donorsFirebase/crudDonors"
+
 export const authOptions = {
     providers: [
         GithubProvider({
@@ -15,10 +17,18 @@ export const authOptions = {
     ],
     callbacks: {
         async session({ session, token }) {
+            const { getDonor } = crudDonors()
+
             try {
-                return { ...session, id: token.sub }
+                const donor = await getDonor(String(token.sub))
+
+                if (donor == null) return { ...session, id: token.sub, vip: false, lasDonate: null }
+
+                const { lastDonate, lastDonateFormatted } = donor
+
+                return { ...session, id: token.sub, vip: lastDonate ? true : false, lastDonate: lastDonateFormatted }
             } catch (error) {
-                return { ...session, id: null }
+                return { ...session, id: null, vip: false, lasDonate: null }
             }
         },
         async signIn({ }) {

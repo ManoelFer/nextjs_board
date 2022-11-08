@@ -1,4 +1,4 @@
-import { setDoc, getDocs, doc, DocumentData, query, collection, orderBy } from "firebase/firestore";
+import { setDoc, getDocs, getDoc, doc, DocumentData, query, collection, orderBy } from "firebase/firestore";
 import { format } from 'date-fns'
 
 import db from "services/firebaseConnection";
@@ -54,9 +54,37 @@ const crudDonors = (): IMethodsCRUDDonors => {
         }
     }
 
+    async function getDonor(docId: string): Promise<IDonor | null> {
+        try {
+            const docRef = doc(db, "donors", docId);
+
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const { donate, lastDonate, image } = docSnap.data()
+
+                const donorData = {
+                    id: docSnap.id,
+                    donate: donate,
+                    lastDonate: lastDonate,
+                    lastDonateFormatted: format(lastDonate.toDate(), 'dd MMMM yyyy'),
+                    image: image,
+                }
+
+                return donorData || null
+            } else {
+                return null
+            }
+        } catch (e) {
+            console.error("Error find donor document: ", e);
+            throw new Error("Erro ao trazer o doador do banco!")
+        }
+    }
+
     return {
         registerDonor,
         getDonors,
+        getDonor,
     }
 }
 
