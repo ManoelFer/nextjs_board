@@ -4,6 +4,7 @@ import GithubProvider from "next-auth/providers/github"
 import crudDonors from "services/donorsFirebase/crudDonors"
 
 export const authOptions = {
+    secret: process.env.AUTH_SECRET,
     providers: [
         GithubProvider({
             clientId: process.env.GITHUB_ID || "",
