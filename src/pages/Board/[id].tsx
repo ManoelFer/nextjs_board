@@ -5,7 +5,7 @@ import { FiCalendar } from "react-icons/fi"
 
 import crudTasks from "services/tasksFirebase/crudTasks"
 import { ITask } from "services/tasksFirebase/interfaces"
-import { IPropsServerSideTaskDetails } from "./interfaces"
+import { IPropsServerSideTaskDetails } from "../../interfaces/interfacesBoard"
 
 import styles from "./task.module.scss"
 

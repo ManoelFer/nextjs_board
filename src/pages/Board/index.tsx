@@ -14,7 +14,7 @@ import { SupportButton } from 'components/SupportButton'
 
 import crudTasks from 'services/tasksFirebase/crudTasks'
 
-import { IPropsServerSideBoard } from './interfaces'
+import { IPropsServerSideBoard } from '../../interfaces/interfacesBoard'
 import { ITask } from 'services/tasksFirebase/interfaces'
 
 import styles from './styles.module.scss'

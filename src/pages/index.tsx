@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 import crudDonors from 'services/donorsFirebase/crudDonors'
 
-import { IHomeProps } from './interfaces'
+import { IHomeProps } from '../interfaces/interfacesHome'
 
 import boardUser from '/public/images/board-user.svg'
 

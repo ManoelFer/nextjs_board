@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { toast } from 'react-toastify'
 import { PayPalButtons } from '@paypal/react-paypal-js'
 
-import { IDonateProps } from './interface'
+import { IDonateProps } from '../../interfaces/interfacesDonate'
 
 import crudDonors from 'services/donorsFirebase/crudDonors'
 
